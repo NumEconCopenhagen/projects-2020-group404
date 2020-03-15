@@ -4,7 +4,6 @@ import numpy as np
 import itertools as it
 from scipy import optimize
 
-%matplotlib inline
 import matplotlib.pyplot as plt # baseline modul
 from mpl_toolkits.mplot3d import Axes3D # for 3d figures
 plt.style.use('seaborn-whitegrid') # whitegrid nice with 3d
@@ -64,21 +63,24 @@ def f(c = cl[0], l = cl[1], v = v, epsilon = epsilon):
 
 
 
-
-
-
-# solution to question 2 :D
-
 wliste = np.arange(0.5, 1.5, 0.01).tolist()
-uliste = []
+cliste = []
+lliste = []
 for w in wliste:
     sol = solver(m,v,epsilon,tao0,tao1,kappa,w,cl,f)
     c = sol.x[0]
     l = sol.x[1]
-    u = f(c,l)
-    uliste.append(u)
-print(uliste)
-print(wliste)
+    cliste.append(c)
+    lliste.append(l)
 fig = plt.figure(figsize=(10,4))# figsize is in inches...
 ax = fig.add_subplot(1,2,1)
-ax.plot(wliste,uliste) # create surface plot in the axis
+ax.plot(cliste,lliste) # create surface plot in the axis
+
+
+# Opgave 3
+def T(lliste = lliste, wliste = wliste, tao0 = tao0, tao1 = tao1, kappa = kappa):
+    return np.sum(tao0*wliste*lliste+tao1*max(wliste*lliste-kappa,0))
+#T_sum = np.sum(T())
+print(T)
+
+
