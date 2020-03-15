@@ -114,19 +114,79 @@ for wrand in w_rand:
     ltax = sol.x[1]
     Tax = Tax + T(wrand,ltax)
 print(f'Total tax revenue = {Tax:.8f}')
-# Nemt!
+
 
 
 # Opgave 5
-# Må være noget optimize igen? Optimize T funktionen mht tao0, tao1 og kappa. 
-# Kan man overhovedet det?
 
+
+# Hvad med sådan her?:
+w2 = np.zeros(np.size(wliste))
+l2 = np.zeros(np.size(lliste))
+
+
+t0_t1_ka = (1,1,1)
+
+def Tsolver():
+    def objtm(t0_t1_ka):
+        tao0 = t0_t1_ka[0]
+        tao1 = t0_t1_ka[1]
+        kappa = t0_t1_ka[2]
+        return -T(tao0, tao1, kappa)
 
 # Bounds
 boundt0 = (0,1)
 boundt1 = (tao0,1)
-boundk = (,) 
+boundk = kappa > 0
 bounds = (boundt0, boundt1, boundk)
 
+guess3 = np.array([1,1,1])
+
+soltm = optimize.minimize(objtm, guess3, method = 'SLSQP', bounds = bounds)
+return soltm
 
 
+
+
+
+
+
+
+
+
+w2 = 1
+l2 = 0.39999449
+x = [0.1,0.1,0.1]
+
+
+def T2(tao0 = tao0, tao1 = tao1, kappa = kappa, w = w2, l = l2):
+    return tao0*w*l+tao1*max(w*l-kappa,0)
+
+# Defining a function that will solve the model.
+def maxtax(tao0, tao1, kappa, w = w2, l = l2):
+
+    # converting utility function to list
+    def obj(x):
+        tao0 = x[0]
+        tao1 = x[1]
+        kappa = x[2]
+        return -T2(tao0,tao1,kappa)
+
+    # constraints and bounds
+    # bounds for c and l
+    boundtao0 = (0.0,1)
+    boundtao1 = (tao0,1)
+    boundk = (0,1)
+    # combining constraints and bounds for the optimizer
+    bounds = (boundtao0,boundtao1,boundk)
+
+    #initial guess
+    initial_guess = np.array([0.1,0.1,0.1])
+
+    # c. call solver
+    sol2 = optimize.minimize(obj,initial_guess,
+    method='SLSQP', bounds=bounds)
+
+    return sol2
+sol2 = maxtax(tao0, tao1, kappa, w = w2, l = l2)
+print(sol2)
