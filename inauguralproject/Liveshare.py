@@ -97,8 +97,24 @@ print(f'Total tax revenue = {Tax:.8f}')
 
 
 
+#Opgave 4
+Tax = 0
+
+#Defining a function for Tax revenue
+def T(w, l, tao0 = tao0, tao1 = tao1, kappa = kappa):
+    return tao0*w*l+tao1*max(w*l-kappa,0)
+
+# defining uniform distribution of wages
+w_rand = np.random.uniform(0.5,1.5,size = 10000)
+
+# calculation total tax revenue
+for wrand in w_rand:
+    sol = solver(m,v,epsilon = 0.1,tao0,tao1,kappa,wrand,cl,f)
+    ltax = sol.x[1]
+    Tax = Tax + T(wrand,ltax)
+print(f'Total tax revenue = {Tax:.8f}')
+# Nemt!
 
 
-
-
+# Opgave 5
 
