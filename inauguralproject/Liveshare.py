@@ -1,14 +1,9 @@
+# Kommer lige om 2 sek, laver lige kaffe!
+
 # importint packages
 import numpy as np
 import itertools as it
 from scipy import optimize
-
-# importing pyplot and chossing style.
-import matplotlib.pyplot as plt
-plt.style.use('seaborn-whitegrid')
-
-# Question 1
-# Explain how to solve the model.
 
 # Defining a function that will solve the model.
 def solver(m,v,epsilon,tao0,tao1,kappa,w,cl,f):
@@ -44,3 +39,5 @@ def print_solution(c,l,u):
     print(f'c = {c:.8f}')
     print(f'l = {l:.8f}')
     print(f'u = {u:.8f}')
+
+
