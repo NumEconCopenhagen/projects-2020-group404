@@ -118,7 +118,14 @@ print(f'Total tax revenue = {Tax:.8f}')
 
 
 # Opgave 5
-#Må være noget optimize igen??
-fuuuck
+# Må være noget optimize igen? Optimize T funktionen mht tao0, tao1 og kappa. 
+# Kan man overhovedet det?
+
+
+boundt0 = (0,1)
+boundt1 = (tao0,1)
+boundk = (,) 
+bounds = (boundt0, boundt1, boundk)
+
 
 
