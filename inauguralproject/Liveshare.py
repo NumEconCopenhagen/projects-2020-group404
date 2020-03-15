@@ -98,6 +98,7 @@ print(f'Total tax revenue = {Tax:.8f}')
 
 
 #Opgave 4
+#clearing total tax
 Tax = 0
 
 #Defining a function for Tax revenue
@@ -117,4 +118,7 @@ print(f'Total tax revenue = {Tax:.8f}')
 
 
 # Opgave 5
+#Må være noget optimize igen??
+fuuuck
+
 
