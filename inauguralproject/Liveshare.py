@@ -122,6 +122,7 @@ print(f'Total tax revenue = {Tax:.8f}')
 # Kan man overhovedet det?
 
 
+# Bounds
 boundt0 = (0,1)
 boundt1 = (tao0,1)
 boundk = (,) 
