@@ -77,11 +77,28 @@ ax = fig.add_subplot(1,2,1)
 ax.plot(cliste,lliste) # create surface plot in the axis
 
 
-# Opgave 3
-def T(lliste = lliste, wliste = wliste, tao0 = tao0, tao1 = tao1, kappa = kappa):
-    return np.array([tao0*wliste*lliste+tao1*max(wliste*lliste-kappa,0)])
-#T_sum = np.sum(T())
-T = np.array([tao0*wliste*lliste+tao1*max(wliste*lliste-kappa,0)])
-print(T)
-type(T)
+# Question 3
+#clearing total tax
+Tax = 0
+
+#Defining a function for Tax revenue
+def T(w, l, tao0 = tao0, tao1 = tao1, kappa = kappa):
+    return tao0*w*l+tao1*max(w*l-kappa,0)
+
+# defining uniform distribution of wages
+w_rand = np.random.uniform(0.5,1.5,size = 10000)
+
+# calculation total tax revenue
+for wrand in w_rand:
+    sol = solver(m,v,epsilon,tao0,tao1,kappa,wrand,cl,f)
+    ltax = sol.x[1]
+    Tax = Tax + T(wrand,ltax)
+print(f'Total tax revenue = {Tax:.8f}')
+
+
+
+
+
+
+
 
