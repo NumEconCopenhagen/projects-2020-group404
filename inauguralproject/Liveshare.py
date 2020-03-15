@@ -79,8 +79,9 @@ ax.plot(cliste,lliste) # create surface plot in the axis
 
 # Opgave 3
 def T(lliste = lliste, wliste = wliste, tao0 = tao0, tao1 = tao1, kappa = kappa):
-    return np.sum(tao0*wliste*lliste+tao1*max(wliste*lliste-kappa,0))
+    return np.array([tao0*wliste*lliste+tao1*max(wliste*lliste-kappa,0)])
 #T_sum = np.sum(T())
+T = np.array([tao0*wliste*lliste+tao1*max(wliste*lliste-kappa,0)])
 print(T)
-
+type(T)
 
