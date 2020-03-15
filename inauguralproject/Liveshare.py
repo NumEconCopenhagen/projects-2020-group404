@@ -1,4 +1,3 @@
-# Kommer lige om 2 sek, laver lige kaffe!
 
 # importint packages
 import numpy as np
@@ -39,5 +38,4 @@ def print_solution(c,l,u):
     print(f'c = {c:.8f}')
     print(f'l = {l:.8f}')
     print(f'u = {u:.8f}')
-
 
