@@ -54,3 +54,21 @@ def print_solution(c,l,u):
     print(f'l = {l:.8f}')
     print(f'u = {u:.8f}')
 
+# defining a function for calculating total tax revenue
+def totaltax(tao0, tao1, kappa, m, v, epsilon, w, cl, f):
+    global TTR
+    TTR = 0
+    np.random.seed(2020)
+    #Defining a function for Tax revenue
+    def T(tao0, tao1, kappa, w, l):
+        return tao0*w*l+tao1*max(w*l-kappa,0)
+
+    # defining uniform distribution of wages
+    w_rand = np.random.uniform(0.5,1.5,size = 10000)
+
+    # calculation total tax revenue
+    for wrand in w_rand:
+        sol = solver(m,v,epsilon,tao0,tao1,kappa,wrand,cl, f)
+        ltax = sol.x[1]
+        TTR = TTR + T(tao0, tao1, kappa, wrand, ltax)
+    return TTR

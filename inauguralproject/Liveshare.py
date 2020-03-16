@@ -127,7 +127,10 @@ l2 = np.zeros(np.size(lliste))
 
 t0_t1_ka = (1,1,1)
 
-def Tsolver():
+def Tsolver(tao0,tao1,kappa, w = w2 , l = l2):
+    return tao0*w*l+tao1*max(w*l-kappa,0)
+
+def maxT(tao0,tao1,kappa, w = w2, l = l2):
     def objtm(t0_t1_ka):
         tao0 = t0_t1_ka[0]
         tao1 = t0_t1_ka[1]
@@ -149,44 +152,77 @@ return soltm
 
 
 
+# define a function that calculates total tax
+def totaltax():
+    Tax = 0
+
+    #Defining a function for Tax revenue
+    def T(w, l, tao0 = tao0, tao1 = tao1, kappa = kappa):
+        return tao0*w*l+tao1*max(w*l-kappa,0)
+
+    # defining uniform distribution of wages
+    w_rand = np.random.uniform(0.5,1.5,size = 10000)
+
+    # calculation total tax revenue
+    for wrand in w_rand:
+        sol = solver(m,v,epsilon,tao0,tao1,kappa,wrand,cl,f)
+        ltax = sol.x[1]
+        Tax = Tax + T(wrand,ltax)
+
+
+#Opgave 5 nyt :D
 
 
 
+# define a function that calculates total tax
+totaltax = 0
+def totaltax(tao0, tao1, kappa, c = cl[0], l = cl[1], w = 1, m = m, v = v, epsilon = epsilon):
+    totaltax = 0
+    #Defining a function for Tax revenue
+    def T(tao0, tao1, kappa, w, l):
+        return tao0*w*l+tao1*max(w*l-kappa,0)
 
+    # defining uniform distribution of wages
+    w_rand = np.random.uniform(0.5,1.5,size = 10)
 
-w2 = 1
-l2 = 0.39999449
-x = [0.1,0.1,0.1]
-
-
-def T2(tao0 = tao0, tao1 = tao1, kappa = kappa, w = w2, l = l2):
-    return tao0*w*l+tao1*max(w*l-kappa,0)
-
-# Defining a function that will solve the model.
-def maxtax(tao0, tao1, kappa, w = w2, l = l2):
+    # calculation total tax revenue
+    for wrand in w_rand:
+        sol = solver(m,v,epsilon,tao0,tao1,kappa,wrand,cl,f)
+        ltax = sol.x[1]
+        totaltax = totaltax + T(tao0, tao1, kappa, wrand, ltax)
+    return totaltax
+    
+# putting everything into a solver :D
+def solvetax(x, c = cl[0], l = cl[1], w = w, m = m, v = v, epsilon = epsilon):
 
     # converting utility function to list
     def obj(x):
         tao0 = x[0]
         tao1 = x[1]
         kappa = x[2]
-        return -T2(tao0,tao1,kappa)
+        return -totaltax(tao0, tao1, kappa)
 
     # constraints and bounds
-    # bounds for c and l
-    boundtao0 = (0.0,1)
-    boundtao1 = (tao0,1)
-    boundk = (0,1)
+    # bounds for tao0, tao1, and kappa
+    bndt0 = (0.0,tao1) # maybe upper bound tao1
+    bndt1 = (tao0,1.0) # maybe lower bound tao0
+    bndk = (0.0,1000000000)
+    #conk = lambda x: kappa
     # combining constraints and bounds for the optimizer
-    bounds = (boundtao0,boundtao1,boundk)
+    bounds = (bndt0, bndt1, bndk)
+    #cons = ({'type': 'ineq', 'fun': conk})
 
     #initial guess
-    initial_guess = np.array([0.1,0.1,0.1])
+    initial_guess = np.array([0,0,0])
 
     # c. call solver
-    sol2 = optimize.minimize(obj,initial_guess,
-    method='SLSQP', bounds=bounds)
+    solvetax = optimize.minimize(obj,initial_guess,
+    method='SLSQP', bounds=bounds) # constraints = cons
 
-    return sol2
-sol2 = maxtax(tao0, tao1, kappa, w = w2, l = l2)
-print(sol2)
+    return solvetax
+
+solvetax = solvetax(x, c, l, w, m, v, epsilon)
+
+print(solvetax.x[0])
+print(solvetax.x[1])
+print(solvetax.x[2])
