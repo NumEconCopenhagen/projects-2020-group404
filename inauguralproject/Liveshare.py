@@ -8,6 +8,10 @@ import matplotlib.pyplot as plt # baseline modul
 from mpl_toolkits.mplot3d import Axes3D # for 3d figures
 plt.style.use('seaborn-whitegrid') # whitegrid nice with 3d
 
+#Defining model
+def f(c = cl[0], l = cl[1], v = v, epsilon = epsilon):
+    return np.log(c) - v*(l**(1+1/epsilon))/(1+1/epsilon)
+
 # Defining a function that will solve the model.
 def solver(m,v,epsilon,tao0,tao1,kappa,w,cl,f):
 
@@ -86,7 +90,7 @@ def T(w, l, tao0 = tao0, tao1 = tao1, kappa = kappa):
     return tao0*w*l+tao1*max(w*l-kappa,0)
 
 # defining uniform distribution of wages
-w_rand = np.random.uniform(0.5,1.5,size = 10000)
+w_rand = np.random.uniform(0.5,1.5,size = 10)
 
 # calculation total tax revenue
 for wrand in w_rand:
@@ -97,87 +101,36 @@ print(f'Total tax revenue = {Tax:.8f}')
 
 
 
-#Opgave 4
-#clearing total tax
-Tax = 0
 
-#Defining a function for Tax revenue
-def T(w, l, tao0 = tao0, tao1 = tao1, kappa = kappa):
-    return tao0*w*l+tao1*max(w*l-kappa,0)
+def ltst(w_rand = w_rand, epsilon = epsilon, tao0 = tao0, tao1 = tao1, kappa = kappa):
+    lt = np.empty(np.size(w_rand))
+    for i,w in enumerate(w_rand):
+        lt[i] = solver(m, v, epsilon, tao0, tao1, kappa, w, cl, f).x[0]
+    return lt
+type(lt)
 
-# defining uniform distribution of wages
-w_rand = np.random.uniform(0.5,1.5,size = 10000)
-
-# calculation total tax revenue
-for wrand in w_rand:
-    sol = solver(m,v,epsilon = 0.1,tao0,tao1,kappa,wrand,cl,f)
-    ltax = sol.x[1]
-    Tax = Tax + T(wrand,ltax)
-print(f'Total tax revenue = {Tax:.8f}')
-
-
-
-# Opgave 5
+def sum_T(w_rand = w_rand, epsilon = epsilon, tao0 = tao0, tao1 = tao1, kappa = kappa):
+    lt = ltst(w_rand = w_rand, epsilon = epsilon, tao0 = tao0, tao1 = tao1, kappa = kappa)
+    
+    sum = 0
+    for i in range(np.size(w_rand)):
+        w = w_rand[i]
+        lt = lt[i]
+        sum += tao0*w*lt+tao1*np.max(w*lt-kappa,0)
+    return sum
+print(sum_T())
 
 
-# Hvad med sådan her?:
-w2 = np.zeros(np.size(wliste))
-l2 = np.zeros(np.size(lliste))
-
-
-t0_t1_ka = (1,1,1)
-
-def Tsolver(tao0,tao1,kappa, w = w2 , l = l2):
-    return tao0*w*l+tao1*max(w*l-kappa,0)
-
-def maxT(tao0,tao1,kappa, w = w2, l = l2):
-    def objtm(t0_t1_ka):
-        tao0 = t0_t1_ka[0]
-        tao1 = t0_t1_ka[1]
-        kappa = t0_t1_ka[2]
-        return -T(tao0, tao1, kappa)
-
-# Bounds
-boundt0 = (0,1)
-boundt1 = (tao0,1)
-boundk = kappa > 0
-bounds = (boundt0, boundt1, boundk)
-
-guess3 = np.array([1,1,1])
-
-soltm = optimize.minimize(objtm, guess3, method = 'SLSQP', bounds = bounds)
-return soltm
-
-
+#Opgave 5
 
 
 
 # define a function that calculates total tax
-def totaltax():
-    Tax = 0
-
-    #Defining a function for Tax revenue
-    def T(w, l, tao0 = tao0, tao1 = tao1, kappa = kappa):
-        return tao0*w*l+tao1*max(w*l-kappa,0)
-
-    # defining uniform distribution of wages
-    w_rand = np.random.uniform(0.5,1.5,size = 10000)
-
-    # calculation total tax revenue
-    for wrand in w_rand:
-        sol = solver(m,v,epsilon,tao0,tao1,kappa,wrand,cl,f)
-        ltax = sol.x[1]
-        Tax = Tax + T(wrand,ltax)
-
-
-#Opgave 5 nyt :D
-
-
-
-# define a function that calculates total tax
-totaltax = 0
-def totaltax(tao0, tao1, kappa, c = cl[0], l = cl[1], w = 1, m = m, v = v, epsilon = epsilon):
-    totaltax = 0
+# defining a function for calculating total tax revenue
+def totaltax(tao0, tao1, kappa, m, v, epsilon, w, cl, f):
+    global TTR
+    TTR = 0
+    np.random.seed(2020)
     #Defining a function for Tax revenue
     def T(tao0, tao1, kappa, w, l):
         return tao0*w*l+tao1*max(w*l-kappa,0)
@@ -187,11 +140,14 @@ def totaltax(tao0, tao1, kappa, c = cl[0], l = cl[1], w = 1, m = m, v = v, epsil
 
     # calculation total tax revenue
     for wrand in w_rand:
-        sol = solver(m,v,epsilon,tao0,tao1,kappa,wrand,cl,f)
+        sol = solver(m,v,epsilon,tao0,tao1,kappa,wrand,cl, f)
         ltax = sol.x[1]
-        totaltax = totaltax + T(tao0, tao1, kappa, wrand, ltax)
-    return totaltax
-    
+        TTR = TTR + T(tao0, tao1, kappa, wrand, ltax)
+    return TTR
+
+
+
+
 # putting everything into a solver :D
 def solvetax(x, c = cl[0], l = cl[1], w = w, m = m, v = v, epsilon = epsilon):
 
@@ -200,29 +156,33 @@ def solvetax(x, c = cl[0], l = cl[1], w = w, m = m, v = v, epsilon = epsilon):
         tao0 = x[0]
         tao1 = x[1]
         kappa = x[2]
-        return -totaltax(tao0, tao1, kappa)
+        return -totaltax(tao0, tao1, kappa, m, v, epsilon, w, cl, f)
 
     # constraints and bounds
     # bounds for tao0, tao1, and kappa
-    bndt0 = (0.0,tao1) # maybe upper bound tao1
-    bndt1 = (tao0,1.0) # maybe lower bound tao0
-    bndk = (0.0,1000000000)
+    #bndt0 = (0.0,tao1) # maybe upper bound tao1
+    #bndt1 = (tao0,1.0) # maybe lower bound tao0
+    #bndk = (0.0,1000000000)
     #conk = lambda x: kappa
     # combining constraints and bounds for the optimizer
-    bounds = (bndt0, bndt1, bndk)
+    #bounds = (bndt0, bndt1, bndk)
     #cons = ({'type': 'ineq', 'fun': conk})
 
     #initial guess
     initial_guess = np.array([0,0,0])
 
     # c. call solver
-    solvetax = optimize.minimize(obj,initial_guess,
-    method='SLSQP', bounds=bounds) # constraints = cons
+    optimaltax = optimize.minimize(obj,initial_guess,
+    method='Nelder-Mead') # , bounds=bounds, constraints = cons
 
-    return solvetax
+    return optimaltax
 
 solvetax = solvetax(x, c, l, w, m, v, epsilon)
 
+print(solvetax)
 print(solvetax.x[0])
 print(solvetax.x[1])
 print(solvetax.x[2])
+
+
+
