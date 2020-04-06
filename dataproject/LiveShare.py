@@ -94,7 +94,7 @@ df_long
 #Define plot axes
 def plot_s(df, Sex):
     I = df["Sex"] == Sex
-    ax=df.loc[I,:].plot(x="year", y='e', style='-o', legend=False)
+    ax=df.loc[I,:].plot(x="variable", y='value', style='-o', legend=False)
 
 
 widgets.interact(plot_s, 
