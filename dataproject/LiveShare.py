@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import pandas as pd
 import ipywidgets as widgets
 from IPython.display import display
@@ -25,10 +26,10 @@ df.rename(columns = {'Unnamed: 4':'Age'}, inplace=True)
 
 
 #Renaming years because having them as numbers can cause problems
-years = {}
-for i in range(2005,2019+1): # range from 2008 to but not including 2018
-    years[str(i)] = f'year{i}'
-df.rename(columns = years, inplace=True)
+#years = {}
+#for i in range(2005,2019+1): # range from 2008 to but not including 2018
+#    years[str(i)] = f'year{i}'
+#df.rename(columns = years, inplace=True)
 
 
 #find index of sex
@@ -59,17 +60,27 @@ df.head(5)
 #Define unique values
 ALL = 'ALL'
 
-def unique_sorted_values_pluss_all(array):
-    unique = array.unique().tolist
+def unique_sorted_values_plus_all(array):
+    liste = array.values.tolist()
+    unique = np.unique(liste)
     unique.sort()
+    unique = unique.tolist()
     unique.insert(0,ALL)
     return unique
 
 #creating drop downs
-dropdown_year = widgets.Dropdown(options=unique_sorted_values_pluss_all(df.Sex))
+dropdown_year = widgets.Dropdown(options=unique_sorted_values_plus_all(df_long.year))
+dropdown_year
 
+def dropdown_year_eventhandler(change):
+    if (change.new == ALL):
+        display(df_long)
+    else:
+        display(df_long[df_long.year == change.new])
 
+dropdown_year.observe(dropdown_year_eventhandler, names='value')
 
+display(dropdown_year)
 
 
 
@@ -88,8 +99,8 @@ dropdown_year = widgets.Dropdown(options=unique_sorted_values_pluss_all(df.Sex))
 
 df.head(5)
 #Define long dataset for sex
-df_long = pd.melt(df,id_vars=["Sex","Education","Age"])
-df_long["Age"][500]
+df_long = pd.melt(df,id_vars=["Sex","Education","Age"], var_name="year",value_name="uddannelsesaktivitet")
+df_long
 
 #Define plot axes
 def plot_s(df, Sex):
