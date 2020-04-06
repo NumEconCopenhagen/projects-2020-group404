@@ -89,7 +89,7 @@ dropdown_year = widgets.Dropdown(options=unique_sorted_values_pluss_all(df.Sex))
 df.head(5)
 #Define long dataset for sex
 df_long = pd.melt(df,id_vars=["Sex","Education","Age"])
-df_long
+df_long["Age"][500]
 
 #Define plot axes
 def plot_s(df, Sex):
