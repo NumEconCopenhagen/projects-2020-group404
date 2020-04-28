@@ -1,19 +1,3 @@
-def square(x):
-    """ square numpy array
-    
-    Args:
-    
-        x (ndarray): input array
-        
-    Returns:
-    
-        y (ndarray): output array
-    
-    """
-    
-    y = x**2
-    return y
-
 # importint packages
 import numpy as np
 import itertools as it
@@ -82,37 +66,3 @@ def totaltax(tao0, tao1, kappa, m, v, epsilon, w, cl, f):
         ltax = sol.x[1]
         TTR = TTR + T(tao0, tao1, kappa, wrand, ltax)
     return TTR
-
-# question 5 #
-
-# defining a function to optimize totaltax
-def solvetax(x, c, l, w, m, v, epsilon, cl, f, tao0, tao1):
-
-    # converting utility function to list
-    def obj(x):
-        tao0 = x[0]
-        tao1 = x[1]
-        kappa = x[2]
-        return -totaltax(tao0, tao1, kappa, m, v, epsilon, w, cl, f)
-
-    # constraints and bounds
-    # bounds for tao0, tao1, and kappa
-    bndt0 = (0.0,1) # maybe upper bound tao1
-    bndt1 = (0.1,1) # maybe lower bound tao0
-    bndk = (0.0,1000000000)
-    #conk = lambda x: kappa
-    # combining constraints and bounds for the optimizer
-    bounds = (bndt0, bndt1, bndk)
-    #cons = ({'type': 'ineq', 'fun': conk})
-
-    #initial guess
-    initial_guess = np.array([0,0,0])
-
-    # c. call solver
-    optimaltax = optimize.minimize(obj,initial_guess,
-    method='SLSQP', bounds=bounds) # constraints = cons
-
-    return optimaltax
-
-
-
