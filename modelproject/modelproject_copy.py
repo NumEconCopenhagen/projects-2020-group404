@@ -1,5 +1,4 @@
 from scipy import optimize
-
 def solve_for_ss(pi_t1, gamma, ybar, pistar, alpha):
     # define objective function
     def AS(y_t):
