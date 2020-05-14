@@ -18,8 +18,8 @@ def unique_sorted_values_plus_all(array):
     unique.insert(0,ALL)
     return unique
 
-#Defining what to show in table very likely there is an easier method, this was hell.
-# eg. if ALL is selected in all drop downs, it displays the full dataframe, if all is selected in all but year 
+#Defining what to show in the table, very likely that there is an easier method, this was hell.
+# eg. if ALL is selected in all drop downs, it displays the full dataframe, if ALL is selected in each drop down but year then
 # it displays the dataframe with the selected year from the drop down. and so on for all the different combinations.
 def filters(year, age, sex, education, df_long, output, plot_output):
     output.clear_output()
