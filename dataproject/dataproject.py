@@ -63,3 +63,6 @@ def filters(year, age, sex, education, df_long, output, plot_output):
     with plot_output:
         sns.kdeplot(filters['uddannelsesaktivitet'], shade=True)
         plt.show()
+
+
+
