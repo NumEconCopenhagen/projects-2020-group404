@@ -10,7 +10,9 @@ Jonathan Isaksen, smg158
 
 Mathias Udsen, :
     Data analysis project:
-
-
+    - Amalie&Asima&Marina
+    - Show me your anaconda
+    
     Model analysis project:
-        
+    - AAIJ
+    - den_danske_metode
